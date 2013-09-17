@@ -48,40 +48,6 @@ var doDockerRequest = function (url, cb) {
     http.request(options, callback).end();
 };
 
-var doDockerPostRequest = function (url, data, cb) {
-  var body = JSON.stringify(data);
-
-  var request = new http.ClientRequest({
-      hostname: "localhost",
-      port: 4243,
-      path: url,
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-          "Content-Length": body.length // Often this part is optional
-      }
-  }, function (response) {
-      var str = '';
-
-      //another chunk of data has been recieved, so append it to `str`
-      response.on('data', function (chunk) {
-        str += chunk;
-      });
-
-      //the whole response has been recieved, so we just print it out here
-      response.on('end', function () {
-        if (str.indexOf("does not exist") != -1)
-          cb('error');
-        else
-          cb(JSON.parse(str));
-      });
-  });
-
-  request.end(body);
-}
-
-
-
 // get Graph path
 var getGraphPath = function (imageId, cb) {
   doDockerRequest('/images/' + imageId + '/json', function (imageDetail) {

@@ -4,10 +4,9 @@ var path = require('path');
 
 // recursive list maker
 var getListToCopyAndDelete = function (root, dstDir, listToCp, listToDelete) {
-
   var files = fs.readdirSync(root);
-
   files.forEach(function (file) {
+    // if its a whiteout file add it to the delete list
     if (file.indexOf(".wh.") != -1) {
       var fullPath = path.join(dstDir, file.substring(4));
       var fullPath2 = path.join(dstDir, file);
@@ -46,13 +45,12 @@ var doAUFSRecursiveCopySync = function (srcDir, dstDir) {
 
   getListToCopyAndDelete(srcDir,dstDir, listToCp,listToDelete);
 
-  // do the copy
+  // do the copy using simple CP so that uncopiable directories
+  // such as kernel messages are not CP'd
   sh.run('cd ' + dstDir + ' && cp -r ' + srcDir + ' .');
 
   deleteThisList(listToDelete, dstDir);
 };
-
-// doAUFSRecursiveCopySync("/var/lib/docker/graph/cd196fd0ebaaaafedbf2ff1333314a1e106ff9bd4b56d37812306d51e2fdf356/layer/","/var/lib/docker/containers/d80b6d04b509c33cfe4b661299dc1852a78fc3031f8c64a67a83c12f5cb8568c/rootfs/");
 
 module.exports.doAUFSRecursiveCopySync = doAUFSRecursiveCopySync;
 
