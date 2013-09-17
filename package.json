@@ -1,0 +1,28 @@
+{
+  "name": "flattenDockerImages",
+  "version": "0.0.0",
+  "description": "Node module to flatten docker images",
+  "main": "ImageFlattener.js",
+  "scripts": {
+    "test": "node ImageFlattener.js <imagename> | optional <layer depth>"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Runnable/flattenDockerImages.git"
+  },
+  "keywords": [
+    "Flatten",
+    "Docker",
+    "Images"
+  ],
+  "author": "Praful Rana",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/Runnable/flattenDockerImages/issues"
+  },
+  "dependencies": {
+    "exec-sync": "~0.1.6",
+    "async": "~0.2.9",
+    "docker.js": "git://github.com/CodeNow/docker.js.git"
+  }
+}
