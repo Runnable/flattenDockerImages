@@ -6,6 +6,7 @@ var wrench = require('wrench');
 var execSync = require('exec-sync');
 var copier = require("./copier");
 var fs = require("fs");
+var walk = require("walk");
 var spawn = require('child_process').spawn;
 var N =  process.argv[3] || 5;
 var theImage = process.argv[2];
@@ -106,20 +107,21 @@ getListOfLayerLocations(theImage, function(list, lastImageId) {
 
   list.forEach(function (layer) {
     console.log("Copying", layer);
-    copier.doAUFSRecursiveCopySync(layer,tempLayerDest);
+    copier.doAUFSRecursiveCopySync(layer,"/home/ubuntu/flattenDockerImages/" + tempLayerDest);
+    console.log("");
   });
 
   // compress the folder
-  execSync("tar -zcvf layer.tar.gz " + tempLayerDest + "layer/");
+  // execSync("tar -zcvf layer.tar.gz " + tempLayerDest + "layer/");
 
-  execSync("mv layer.tar.gz temp/");
+  // execSync("mv layer.tar.gz temp/");
 
-  fs.writeFile("temp/Dockerfile", "FROM " + baseImage + "\r\nADD layer.tar.gz /\r\n", function(err) {
+  fs.writeFile("tempLayerDest/layer/Dockerfile", "FROM " + baseImage + "\r\nADD . /\r\n", function(err) {
     if(err) {
         console.log(err);
     } else {
 
-      build = spawn('docker', ['build', '.'], {cwd:"temp"});
+      build = spawn('docker', ['build', '.'], {cwd:"tempLayerDest/layer/"});
 
       build.stdout.on('data', function (data) {
         console.log('stdout: ' + data);
@@ -131,11 +133,48 @@ getListOfLayerLocations(theImage, function(list, lastImageId) {
 
       build.on('close', function (code) {
         console.log('child process exited with code ' + code);
+        // deleteWhiteoutsForSure();
       });
 
     }
   });
 });
 
+fs.stat(tempLayerDest + "/layer", function(err, list) {
+  console.log(list);
+});
 
 
+
+// var deleteWhiteoutsForSure = function () {
+//   var walk = function(dir, done) {
+//     var results = [];
+//     fs.readdir(dir, function(err, list) {
+//       if (err) return done(err);
+//       var i = 0;
+//       (function next() {
+//         var file = list[i++];
+//         if (!file) return done(null, results);
+//         file = dir + '/' + file;
+//         fs.stat(file, function(err, stat) {
+//           if (stat && stat.isDirectory()) {
+//             walk(file, function(err, res) {
+//               results = results.concat(res);
+//               next();
+//             });
+//           } else {
+//             results.push(file);
+//             next();
+//           }
+//         });
+//       })();
+//     });
+//   };
+
+//   walk (tempLayerDest, function (err, results) {
+//     console.log(results);
+//   });
+// };
+
+
+// deleteWhiteoutsForSure();
