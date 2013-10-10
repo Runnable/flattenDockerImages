@@ -23,7 +23,7 @@
   "dependencies": {
     "async": "~0.2.9",
     "docker.js": "git://github.com/CodeNow/docker.js.git",
-    "wrench": "~1.5.1",
-    "execSync": "~1.0.1-pre"
+    "execSync": "~1.0.1-pre",
+    "node-uuid": "~1.4.1"
   }
 }
