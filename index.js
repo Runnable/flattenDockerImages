@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-module.exports = require('./lib/ImageFlattener');
+module.exports = require('./lib/flattenImage');
