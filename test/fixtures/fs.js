@@ -4,12 +4,20 @@ fs.readdir = function (dir, cb) {
   // console.log('dir:', dir);
   if (dir === '/var/lib/docker/graph/5/layer/') {
     cb(null, [
+      '/var',
+      '/.wh..wh.aufs'
+    ]);
+  } else if (dir === '/var/lib/docker/graph/5/layer/var') {
+    cb(null, [
+      'www'
+    ]);
+  } else if (dir === '/var/lib/docker/graph/5/layer/var/www') {
+    cb(null, [
       'index.php',
       '.wh.index.html',
-      'cssDir',
-      '.wh..wh.aufs'
+      'cssDir'
     ]);
-  } else if (dir === '/var/lib/docker/graph/5/layer/cssDir') {
+  } else if (dir === '/var/lib/docker/graph/5/layer/var/www/cssDir') {
     cb(null, [
       'style.css'
     ]);
@@ -40,9 +48,14 @@ fs.stat = function (dir, cb) {
     isDirectory: function () {
       if (/Dir$/.test(dir)) {
         return true;
-      } else {
-        return false;
       }
+      if (/var$/.test(dir)) {
+        return true;
+      }
+      if (/www$/.test(dir)) {
+        return true;
+      }
+      return false;
     }
   });
 };
@@ -50,7 +63,7 @@ fs.stat = function (dir, cb) {
 fs.exists = function (file, cb) {
   // console.log('exists:', file);
   var exists = true;
-  if (/\/index.html/.test(file)) {
+  if (/index.html/.test(file)) {
     exists = false;
   } 
   if (/\/\.wh\.aufs/.test(file)) {
