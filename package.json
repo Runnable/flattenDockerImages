@@ -4,7 +4,7 @@
   "description": "Node module to flatten docker images",
   "main": "ImageFlattener.js",
   "scripts": {
-    "test": "node ImageFlattener.js <imagename> | optional <layer depth>"
+    "test": "./node_modules/.bin/mocha -R spec"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,9 @@
   "dependencies": {
     "async": "~0.2.9",
     "docker.js": "git://github.com/CodeNow/docker.js.git",
-    "execSync": "~1.0.1-pre",
     "node-uuid": "~1.4.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.13.0"
   }
 }
